@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import EmployeeService from '../services/EmployeeService'
+
 
 export default class ListEmployeeComponent extends Component {
     constructor(props)
@@ -7,17 +9,33 @@ export default class ListEmployeeComponent extends Component {
 
         this.state = {
             employees: [{
-                firstName: "Maitry",
-                LastName: "Jadiya",
+                firstName: "Maitry-hardcode",
+                lastName: "Jadiya-3",
                 emailId: "maitry@gmail.com",
                 action: "delete"
             }]
         }
+
+        this.addEmployee = this.addEmployee.bind(this);
+    }
+    componentDidMount(){
+        EmployeeService.getEmployees().then((res)=>{
+            this.setState({employees: res.data})
+        })
+    }
+    addEmployee()
+    {
+        this.props.history.push('/add-employee')
     }
   render() {
     return (
       <div>
         <h2 className="text-center">Employees List</h2>
+        <div className="row">
+            <button className='btn btn-lg btn-primary' onClick={this.addEmployee}>
+                Add Employee
+            </button>
+        </div>
         <div className="row">
             <table className='table table-stripped table-bordered'>
                 <thead>
@@ -32,9 +50,9 @@ export default class ListEmployeeComponent extends Component {
                     {
                         this.state.employees.map(
                             employee => 
-                            <tr key = {employee.id}>
+                            <tr key = {employee.emailId}>
                                 <td>{employee.firstName}</td>
-                                <td>{employee.LastName}</td>
+                                <td>{employee.lastName}</td>
                                 <td>{employee.emailId}</td>
                             </tr>
                         )
